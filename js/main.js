@@ -1,6 +1,6 @@
-import * as THREE from 'three';
-import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-import { STLLoader } from 'three/addons/loaders/STLLoader.js'
+import * as THREE from './three.js';
+import { OrbitControls } from './OrbitControls.js';
+import { STLLoader } from './STLLoader.js'
 
 // Container
 const container = document.createElement('div');
@@ -26,9 +26,9 @@ scene.add(plane);
 plane.receiveShadow = true;
 
 // Lights
-scene.add(new THREE.HemisphereLight(0x8d7c7c, 0x494966, 3));
-addShadowedLight(1, 1, 1, 0xffffff, 3.5);
-addShadowedLight(0.5, 1, - 1, 0xffd500, 3);
+scene.add(new THREE.HemisphereLight(0xffffff, 0xffffff, 3));
+addShadowedLight(1, 1, 1, 0xffffff, 3);
+addShadowedLight(0.5, 1, - 1, 0xffffff, 3);
 function addShadowedLight(x, y, z, color, intensity) {
     const directionalLight = new THREE.DirectionalLight(color, intensity);
     directionalLight.position.set(x, y, z);
@@ -58,9 +58,14 @@ if (filename) {
     // Load STL
     const stl_loader = new STLLoader();
     stl_loader.load('public/' + filename, function (geometry) {
-        const material = new THREE.MeshPhongMaterial({ color: 0xff9c7c, specular: 0x494949, shininess: 200 });
+        const material = new THREE.MeshPhongMaterial({ color: 0x669999, specular: 0x669999, shininess: 50 });
         const mesh = new THREE.Mesh(geometry, material);
-        mesh.position.set(0, 30, 0);
+        const box = new THREE.Box3;
+        mesh.geometry.computeBoundingBox();
+        box.copy(mesh.geometry.boundingBox);
+        let box_dims = new THREE.Vector3();
+        box.getSize(box_dims);
+        mesh.position.set(0, box_dims.z/2, 0);
         mesh.rotation.set(-90 * (Math.PI / 180), 0, 0);
         // mesh.scale.set(1, 1, 1);
         mesh.castShadow = true;
