@@ -54,10 +54,10 @@ container.appendChild(renderer.domElement);
 // OrbitControls
 const controls = new OrbitControls(camera, renderer.domElement);
 
-if (filepath) {
+if (file) {
     // Load STL
     const stl_loader = new STLLoader();
-    stl_loader.load(filepath, function (geometry) {
+    stl_loader.load('3D_files/' + file, function (geometry) {
         const material = new THREE.MeshPhongMaterial({ color: 0x669999, specular: 0x669999, shininess: 50 });
         const mesh = new THREE.Mesh(geometry, material);
         const box = new THREE.Box3;
