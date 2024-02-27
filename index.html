@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>STL Viewer</title>
+    <style>
+        body {
+            margin: 0;
+        }
+    </style>
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "https://unpkg.com/three@0.161.0/build/three.module.js",
+          "three/addons/": "https://unpkg.com/three@0.161.0/examples/jsm/"
+        }
+      }
+    </script>
+</head>
+
+<body>
+    <form id="file-select-form">
+        <select id="file-select" class="form-select" name="filename">
+            <option>...</option>
+            <option>ForksV1.stl</option>
+        </select>
+    </form>
+    <script>
+        // Get filename
+        const urlParams = new URLSearchParams(window.location.search);
+        const filename = urlParams.get('filename')
+        document.querySelectorAll('#file-select option').forEach((elem) => {
+            if (elem.innerHTML == filename) {
+                elem.selected = true;
+            }
+        });
+        document.querySelector('#file-select').addEventListener('change', function() {
+            document.querySelector('#file-select-form').submit();
+        })
+    </script>
+    <script type="module" src="/main.js"></script>
+</body>
+
+</html>
