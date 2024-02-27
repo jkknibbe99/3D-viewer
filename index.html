@@ -44,7 +44,7 @@
 
 <body>
     <form id="file-select-form" class="p-3">
-        <select id="file-select" class="form-select" name="filename">
+        <select id="file-select" class="form-select" name="filepath">
             <option>...</option>
         </select>
     </form>
@@ -54,38 +54,31 @@
             $('#file-select-form').submit();
         })
 
-        // Get filename
+        // Get filepath
         const urlParams = new URLSearchParams(window.location.search);
-        const filename = urlParams.get('filename')
-
-        if (!filename || filename == '...') {
+        const filepath = urlParams.get('filepath')
+        if (filepath == '...') {
+            location.href = '/';
+        } else if (!filepath) {
             $('#file-select-form').css('margin-left', 'calc(50vw - 100px)');
             $('#file-select-form').css('width', '200px');
             $('#file-select-form').prepend('<label for="file-select" class="pb-2"><strong>Select a file to view</strong></label>');
         }
 
         // get public files
-        $.get('/public').then((resp) => {
-            const regexp = /\/public\/([0-9a-zA-Z_\-. ]+\.[0-9a-zA-Z]+)/g;
-            const matches = [...resp.matchAll(regexp)]
-            let filenames = [];
-            for (let i = 0; i < matches.length; i++) {
-                filenames.push(matches[i][1]);
-            }
+        $.get('https://api.github.com/repos/jkknibbe99/3D-viewer/contents/3D_files').then((files) => {
             // Add option elems to file-select
-            for (let i = 0; i < filenames.length; i++) {
-                $('#file-select').html($('#file-select').html() + '<option>' + filenames[i] + '</option>');
+            for (let i = 0; i < files.length; i++) {
+                $('#file-select').html($('#file-select').html() + '<option value="' + files[i].path + '">' + files[i].name + '</option>');
             }
             // Set selected file
-            $('#file-select option').each(function(index) {
-                if ($(this).clone().children().remove().end().text() == filename) {
+            $('#file-select option').each(function (index) {
+                if ($(this).val() == filepath) {
                     $(this).prop('selected', true);
                 }
 
             });
         });
-
-        
     </script>
     <script type="module" src="./js/main.js"></script>
 </body>
