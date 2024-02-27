@@ -17,6 +17,7 @@
 
         #file-select-form {
             position: fixed;
+            text-align: center;
         }
     </style>
 
@@ -48,13 +49,20 @@
         </select>
     </form>
     <script>
+        // onchange submit
+        $('#file-select').on('change', function () {
+            $('#file-select-form').submit();
+        })
+
         // Get filename
         const urlParams = new URLSearchParams(window.location.search);
         const filename = urlParams.get('filename')
-        // onchange submit
-        $('#file-select').on('change', function() {
-            $('#file-select-form').submit();
-        })
+
+        if (!filename || filename == '...') {
+            $('#file-select-form').css('margin-left', 'calc(50vw - 100px)');
+            $('#file-select-form').css('width', '200px');
+            $('#file-select-form').prepend('<label for="file-select" class="pb-2"><strong>Select a file to view</strong></label>');
+        }
 
         // get public files
         $.get('/public').then((resp) => {
