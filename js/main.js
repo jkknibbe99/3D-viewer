@@ -8,7 +8,7 @@ document.body.appendChild(container);
 
 // Camera
 const camera = new THREE.PerspectiveCamera(35, window.innerWidth / window.innerHeight, 1, 1000);
-camera.position.set(300, 300, 300);
+camera.position.set(200, 100, 200);
 
 // Scene
 const scene = new THREE.Scene();
@@ -53,12 +53,21 @@ container.appendChild(renderer.domElement);
 
 // OrbitControls
 const controls = new OrbitControls(camera, renderer.domElement);
+controls.mouseButtons = {
+    LEFT: THREE.MOUSE.ROTATE,
+    MIDDLE: THREE.MOUSE.ROTATE,
+    RIGHT: THREE.MOUSE.PAN
+}
 
 if (file) {
     // Load STL
     const stl_loader = new STLLoader();
     stl_loader.load('3D_files/' + file, function (geometry) {
-        const material = new THREE.MeshPhongMaterial({ color: 0x669999, specular: 0x669999, shininess: 50 });
+        const material = new THREE.MeshPhongMaterial({
+            color: 0x669999, 
+            specular: 0x669999, 
+            shininess: 50
+        });
         const mesh = new THREE.Mesh(geometry, material);
         const box = new THREE.Box3;
         mesh.geometry.computeBoundingBox();
@@ -67,10 +76,24 @@ if (file) {
         box.getSize(box_dims);
         mesh.position.set(0, box_dims.z/2, 0);
         mesh.rotation.set(-90 * (Math.PI / 180), 0, 0);
-        // mesh.scale.set(1, 1, 1);
         mesh.castShadow = true;
         mesh.receiveShadow = true;
         scene.add(mesh);
+        // Add wireframe
+        var geo = new THREE.EdgesGeometry(mesh.geometry); // or WireframeGeometry
+        var mat = new THREE.LineBasicMaterial({ color: 0x000000 });
+        var wireframe = new THREE.LineSegments(geo, mat);
+        mesh.add(wireframe);
+        wireframe.visible = true;
+        // wireframe toggle
+        $('#wrfrm-tgl-btn').on('click', () => {
+            wireframe.visible = !wireframe.visible;
+        });
+        // Position and point camera at mesh
+        
+        camera.position.set(box_dims.x * 2, Math.max(box_dims.x, box_dims.y, box_dims.z) * 2, box_dims.y * 2);
+        controls.target = new THREE.Vector3(0, box_dims.z / 2, 0);
+        controls.update();
     });
 }
 
