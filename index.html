@@ -15,7 +15,7 @@
             margin: 0;
         }
 
-        #file-select-form {
+        #gui {
             position: fixed;
             text-align: center;
         }
@@ -43,13 +43,18 @@
 </head>
 
 <body>
-    <form id="file-select-form" class="p-3">
-        <select id="file-select" class="form-select" name="file">
-            <option>...</option>
-            <option>forks.stl</option>
-            <option>pallet.stl</option>
-        </select>
-    </form>
+    <div id="gui" class="row g-3 p-3">
+        <form id="file-select-form" class="col-auto">
+            <select id="file-select" class="form-select" name="file">
+                <option>...</option>
+                <option>forks.stl</option>
+                <option>pallet.stl</option>
+            </select>
+        </form>
+        <div class="col-auto">
+            <button class="btn btn-secondary" id="wrfrm-tgl-btn">Toggle Wireframe</button>
+        </div>
+    </div>
     <script>
         // onchange submit
         $('#file-select').on('change', function () {
@@ -65,6 +70,7 @@
             $('#file-select-form').css('margin-left', 'calc(50vw - 100px)');
             $('#file-select-form').css('width', '200px');
             $('#file-select-form').prepend('<label for="file-select" class="pb-2"><strong>Select a file to view</strong></label>');
+            $('#wrfrm-tgl-btn').hide();
         }
 
         // Set selected file
@@ -74,7 +80,7 @@
             }
         });
     </script>
-    <script type="module" src="./js/main.js"></script>
+    <script type="module" src="./js/main.js?v=1.2"></script>
 </body>
 
 </html>
