@@ -7,7 +7,7 @@ const container = document.createElement('div');
 document.body.appendChild(container);
 
 // Camera
-const camera = new THREE.PerspectiveCamera(35, window.innerWidth / window.innerHeight, 1, 1000);
+const camera = new THREE.PerspectiveCamera(35, window.innerWidth / window.innerHeight, 1, 3000);
 camera.position.set(200, 100, 200);
 
 // Scene
@@ -17,7 +17,7 @@ scene.fog = new THREE.Fog(0x999999, 600, 1000);
 
 // Ground
 const plane = new THREE.Mesh(
-    new THREE.PlaneGeometry(2000, 2000),
+    new THREE.PlaneGeometry(4000, 4000),
     new THREE.MeshPhongMaterial({ color: 0xcccccc })
 );
 plane.rotation.x = - Math.PI / 2;
@@ -74,7 +74,7 @@ if (file) {
         box.copy(mesh.geometry.boundingBox);
         let box_dims = new THREE.Vector3();
         box.getSize(box_dims);
-        mesh.position.set(0, box_dims.z/2, 0);
+        // mesh.position.set(0, box_dims.z/2, 0);
         mesh.rotation.set(-90 * (Math.PI / 180), 0, 0);
         mesh.castShadow = true;
         mesh.receiveShadow = true;
@@ -90,10 +90,11 @@ if (file) {
             wireframe.visible = !wireframe.visible;
         });
         // Position and point camera at mesh
-        
         camera.position.set(box_dims.x * 2, Math.max(box_dims.x, box_dims.y, box_dims.z) * 2, box_dims.y * 2);
         controls.target = new THREE.Vector3(0, box_dims.z / 2, 0);
         controls.update();
+        // fog
+        scene.fog = new THREE.Fog(0x999999, Math.sqrt((box_dims.x * 2) ** 2 + (box_dims.y * 2) ** 2) * 2, Math.sqrt((box_dims.x * 2) ** 2 + (box_dims.y * 2) ** 2) * 4);
     });
 }
 
